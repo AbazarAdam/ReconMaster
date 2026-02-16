@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card p-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0 text-light">Scanning: <span class="text-neon-cyan">{{ scan.target }}</span></h2>
+                    <small class="text-muted">ID: {{ scan_id }}</small>
+                </div>
+                <div>
+                    <span id="scanStatus" class="badge status-{{ scan.status }} fs-5">{{ scan.status|upper }}</span>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h5 class="text-neon-green">Live Logs <span class="cursor">_</span></h5>
+                <div id="logConsole" class="log-console">
+                    <!-- Logs will appear here -->
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-end">
+                <a id="btnViewResults" href="/results/{{ scan.target }}" class="btn btn-neon disabled">
+                    <i class="fas fa-poll"></i> View Results
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card p-4">
+            <h5 class="mb-3">Scan Phases</h5>
+            <div class="progress mb-3" style="height: 5px; background-color: #2d3748;">
+                <div id="scanProgress" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+            </div>
+            <div class="row text-center text-muted" id="moduleGrid">
+                <div class="col">Pending Initialization...</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const SCAN_ID = "{{ scan_id }}";
+    const TARGET = "{{ scan.target }}";
+
+    // Inline WebSocket script for debugging
+    console.log('=== INLINE WEBSOCKET SCRIPT LOADED ===');
+    console.log('SCAN_ID:', SCAN_ID);
+
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('DOM loaded, initializing WebSocket...');
+
+        const logConsole = document.getElementById('logConsole');
+        const scanStatus = document.getElementById('scanStatus');
+        const btnResults = document.getElementById('btnViewResults');
+        const scanProgress = document.getElementById('scanProgress');
+
+        if (!logConsole) {
+            console.error('ERROR: logConsole element not found!');
+            alert('ERROR: logConsole element not found! Check HTML.');
+            return;
+        }
+
+        console.log('Elements found:', { logConsole, scanStatus, btnResults, scanProgress });
+
+        let logCount = 0;
+        const MAX_LOGS = 1000;
+
+        function addLog(message, className = '') {
+            const div = document.createElement('div');
+            if (className) div.className = className;
+            div.textContent = message;
+            logConsole.appendChild(div);
+            logCount++;
+
+            // Cap logs to prevent lag
+            if (logCount > MAX_LOGS) {
+                logConsole.removeChild(logConsole.firstChild);
+                logCount--;
+            }
+
+            // Auto-scroll logic (only if user is near bottom)
+            const isNearBottom = logConsole.scrollHeight - logConsole.clientHeight - logConsole.scrollTop < 50;
+            if (isNearBottom) {
+                logConsole.scrollTop = logConsole.scrollHeight;
+            }
+        }
+
+        function updateProgress(percent) {
+            if (scanProgress) {
+                scanProgress.style.width = percent + '%';
+            }
+        }
+
+        const wsUrl = `ws://${window.location.host}/ws/${SCAN_ID}`;
+        const ws = new WebSocket(wsUrl);
+
+        ws.onopen = function () {
+            addLog('[System] Connected to live updates!', 'text-success fw-bold');
+        };
+
+        ws.onmessage = function (event) {
+            try {
+                const data = JSON.parse(event.data);
+
+                if (data.type === 'log') {
+                    addLog(`[${new Date().toLocaleTimeString()}] ${data.message}`);
+                } else if (data.type === 'status') {
+                    addLog(`[STATUS] ${data.status.toUpperCase()}`, 'text-warning fw-bold');
+                    if (scanStatus) {
+                        scanStatus.textContent = data.status.toUpperCase();
+                        scanStatus.className = `badge status-${data.status} fs-5`;
+                    }
+                    if (data.status === 'completed') {
+                        updateProgress(100);
+                        if (btnResults) btnResults.classList.remove('disabled');
+                        addLog('[System] Scan finished successfully!', 'text-success fw-bold');
+
+                        // Clear any remaining spinners
+                        const spinners = document.querySelectorAll('.spinner-border');
+                        spinners.forEach(s => {
+                            const parent = s.parentElement;
+                            s.remove();
+                            const icon = document.createElement('i');
+                            icon.className = 'fas fa-check-circle text-success mt-1';
+                            parent.appendChild(icon);
+                        });
+                    } else if (data.status === 'failed') {
+                        addLog('[System] Scan failed.', 'text-danger fw-bold');
+                    }
+                } else if (data.type === 'phase') {
+                    addLog(`>>> Phase: ${data.phase}`, 'text-info fw-bold');
+
+                    // Progress heuristic
+                    const phaseNum = parseInt(data.phase.match(/\d+/));
+                    if (!isNaN(phaseNum)) {
+                        updateProgress(phaseNum * 20 - 10);
+                    }
+
+                    // Update module grid
+                    const moduleGrid = document.getElementById('moduleGrid');
+                    if (moduleGrid && data.modules) {
+                        moduleGrid.innerHTML = '';
+                        data.modules.forEach(moduleName => {
+                            const col = document.createElement('div');
+                            col.className = 'col-md-2 mb-2';
+                            col.id = `mod-${moduleName.replace(/[^a-z0-9]/gi, '_')}`;
+                            col.innerHTML = `
+                                <div class="card bg-dark border-info p-2 text-center shadow-sm">
+                                    <small class="text-info">${moduleName}</small>
+                                    <div class="spinner-border spinner-border-sm text-info mt-1" role="status"></div>
+                                </div>
+                            `;
+                            moduleGrid.appendChild(col);
+                        });
+                    }
+                } else if (data.type === 'module_end') {
+                    const modId = `mod-${data.module.replace(/[^a-z0-9]/gi, '_')}`;
+                    const modEl = document.getElementById(modId);
+                    if (modEl) {
+                        const spinner = modEl.querySelector('.spinner-border');
+                        if (spinner) {
+                            spinner.remove();
+                            const icon = document.createElement('i');
+                            if (data.status === 'completed') {
+                                icon.className = 'fas fa-check-circle text-success mt-1';
+                            } else {
+                                icon.className = 'fas fa-times-circle text-danger mt-1';
+                                icon.title = data.error || 'Failed';
+                            }
+                            modEl.querySelector('.card').appendChild(icon);
+                        }
+                    }
+                } else if (data.type === 'error') {
+                    addLog(`[ERROR] ${data.message}`, 'text-danger');
+                }
+            } catch (e) {
+                console.error('WS Error:', e);
+            }
+        };
+
+        ws.onerror = function (error) {
+            console.error('❌ WebSocket ERROR:', error);
+            addLog('[ERROR] WebSocket connection error', 'text-danger fw-bold');
+        };
+
+        ws.onclose = function (event) {
+            console.log('🔌 WebSocket CLOSED:', event.code, event.reason);
+            addLog('[System] Connection closed', 'text-muted');
+        };
+
+        window.debugWS = ws;
+        console.log('WebSocket available as window.debugWS');
+    });
+</script>
+{% endblock %}

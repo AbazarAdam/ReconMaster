@@ -1,0 +1,104 @@
+:root {
+    --bg-dark: #0a0e1a;
+    --bg-card: #111625;
+    --neon-green: #00ff41;
+    --neon-cyan: #0ff;
+    --text-primary: #e0e6ed;
+    --text-muted: #8b949e;
+    --border-color: #2d3748;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-brand {
+    color: var(--neon-green) !important;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    text-shadow: 0 0 5px var(--neon-green);
+}
+
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+.form-control {
+    background-color: #0d1117;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.form-control:focus {
+    background-color: #161b22;
+    color: var(--text-primary);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 0 0.25rem rgba(0, 255, 255, 0.25);
+}
+
+.btn-neon {
+    background-color: transparent;
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    transition: all 0.3s ease;
+}
+
+.btn-neon:hover {
+    background-color: var(--neon-green);
+    color: #000;
+    box-shadow: 0 0 10px var(--neon-green);
+}
+
+.log-console {
+    background-color: #000;
+    color: var(--neon-green);
+    font-family: 'Consolas', 'Monaco', monospace;
+    height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.status-badge {
+    font-size: 0.8em;
+    padding: 0.2em 0.6em;
+    border-radius: 4px;
+}
+
+.status-running {
+    background-color: #ffd70033;
+    color: #ffd700;
+    border: 1px solid #ffd700;
+}
+
+.status-completed {
+    background-color: #00ff4133;
+    color: #00ff41;
+    border: 1px solid #00ff41;
+}
+
+.status-failed {
+    background-color: #ff000033;
+    color: #ff0000;
+    border: 1px solid #ff0000;
+}
+
+/* Animations */
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.cursor {
+    animation: blink 1s step-end infinite;
+}

@@ -1,0 +1,50 @@
+modules:
+  enabled:
+    subdomain: ["ct", "alienvault", "anubis", "virustotal", "securitytrails"]
+    portscan: ["scanner"]
+    http: ["detector"]
+    screenshot: ["capturer"]
+    shodan: ["enricher"]
+    github: ["dorker"]
+    cloud_buckets: ["enumerator"]
+  
+  subdomain: {}
+  portscan:
+    ports: [21, 22, 23, 25, 53, 80, 110, 111, 135, 139, 143, 443, 445, 993, 995, 1723, 3306, 3389, 5900, 8080, 8443]
+    timeout: 2
+    concurrency: 100
+  http:
+    timeout: 5
+    concurrency: 50
+  screenshot:
+    timeout: 10
+    concurrency: 5
+  github:
+    dorks: ["\"{domain}\"", "\"{domain}\" api_key", "\"{domain}\" secret"]
+  cloud_buckets:
+    wordlist: ["{domain}", "{domain}-backup", "{domain}-assets", "backup-{domain}"]
+    providers: ["aws", "azure", "gcp"]
+
+api_keys:
+  virustotal: ""
+  securitytrails: ""
+  shodan: ""
+  github: "" # optional but recommended
+
+rate_limit: 10 # global requests per second
+proxy:
+  http: "" # e.g. http://proxy:8080
+  https: ""
+  use_tor: false
+
+web:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  secret_key: "change-this-in-production"
+
+logging:
+  level: "DEBUG"
+  file: "recon.log"
+
+database: "recon.db"

@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center mb-5">
+        <h1 class="display-4 text-neon-cyan">ReconMaster</h1>
+        <p class="lead text-muted">Advanced Automated Reconnaissance Framework</p>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-5">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h5 class="card-title mb-3"><i class="fas fa-radar"></i> Launch New Scan</h5>
+            <form id="scanForm">
+                <div class="input-group mb-3">
+                    <span class="input-group-text bg-dark border-secondary text-light"><i
+                            class="fas fa-globe"></i></span>
+                    <input type="text" class="form-control" id="targetInput"
+                        placeholder="Enter target domain (e.g., example.com)" required>
+                    <button class="btn btn-neon" type="submit">Initialize Scan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0 text-neon-green"><i class="fas fa-history"></i> Recent Scans</h3>
+            <button id="btnClearHistory" onclick="clearHistory()" class="btn btn-sm btn-outline-danger">
+                <i class="fas fa-trash-alt"></i> Clear History
+            </button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-dark table-hover" id="scansTable">
+                <thead>
+                    <tr>
+                        <th>Target</th>
+                        <th>Status</th>
+                        <th>Started</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="scansList">
+                    <!-- Populated by JS -->
+                    <tr>
+                        <td colspan="4" class="text-center">Loading recent scans...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        loadScans();
+
+        document.getElementById("scanForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const target = document.getElementById("targetInput").value;
+            const btn = this.querySelector("button");
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Launching...';
+
+            try {
+                const response = await fetch("/api/scans", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ target: target })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    window.location.href = `/scan/${data.scan_id}`;
+                } else {
+                    const err = await response.json();
+                    alert("Error starting scan: " + (err.detail || "Unknown error"));
+                    btn.disabled = false;
+                    btn.innerHTML = 'Initialize Scan';
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Network error occurred.");
+                btn.disabled = false;
+                btn.innerHTML = 'Initialize Scan';
+            }
+        });
+    });
+
+    async function loadScans() {
+        try {
+            const response = await fetch("/api/scans");
+            const scans = await response.json();
+            const tbody = document.getElementById("scansList");
+            tbody.innerHTML = "";
+
+            if (scans.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No recent scans found.</td></tr>';
+                return;
+            }
+
+            scans.forEach(scan => {
+                const row = document.createElement("tr");
+                let badgeClass = "secondary";
+                if (scan.status === "completed") badgeClass = "success";
+                if (scan.status === "running") badgeClass = "warning";
+                if (scan.status === "failed") badgeClass = "danger";
+
+                const viewLink = scan.status === "completed" ?
+                    `<a href="/results/${scan.target}" class="btn btn-sm btn-outline-info">View Results</a>` :
+                    `<a href="/scan/${scan.id}" class="btn btn-sm btn-outline-warning">View Progress</a>`;
+
+                const dateStr = scan.start_time ? new Date(scan.start_time).toLocaleString() : 'N/A';
+
+                row.innerHTML = `
+                <td>${scan.target}</td>
+                <td><span class="badge bg-${badgeClass}">${scan.status ? scan.status.toUpperCase() : 'UNKNOWN'}</span></td>
+                <td>${dateStr}</td>
+                <td>${viewLink}</td>
+            `;
+                tbody.appendChild(row);
+            });
+        } catch (e) {
+            console.error("Failed to load scans", e);
+        }
+    }
+
+    async function clearHistory() {
+        if (!confirm("Are you sure you want to clear ALL scan history? This cannot be undone.")) {
+            return;
+        }
+
+        const btn = document.getElementById("btnClearHistory");
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Clearing...';
+
+        try {
+            const response = await fetch("/api/scans/clear", { method: "POST" });
+            if (response.ok) {
+                loadScans();
+            } else {
+                alert("Failed to clear history.");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Network error occurred.");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  reconmaster:
+    build: .
+    container_name: reconmaster
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./reports:/app/reports
+      - ./recon.db:/app/recon.db
+      - ./config:/app/config
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped

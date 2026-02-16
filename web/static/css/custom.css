@@ -1,0 +1,59 @@
+/* ReconMaster Custom Dark Neon Theme */
+body {
+  background: #0a0e1a;
+  color: #e0e0e0;
+  font-family: 'Fira Code', 'Source Code Pro', monospace, 'Segoe UI', Arial, sans-serif;
+}
+.navbar {
+  background: #101522;
+  border-bottom: 2px solid #00ff9d;
+}
+.navbar-brand {
+  color: #00ff9d !important;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px #00ff9d;
+}
+.btn-neon {
+  color: #0a0e1a;
+  background: #00ff9d;
+  border: 1px solid #00ff9d;
+  box-shadow: 0 0 8px #00ff9d, 0 0 16px #00ff9d44;
+  transition: box-shadow 0.2s;
+}
+.btn-neon:hover {
+  background: #0a0e1a;
+  color: #00ff9d;
+  box-shadow: 0 0 16px #00ff9d, 0 0 32px #00ff9d88;
+}
+.card {
+  background: rgba(20, 24, 40, 0.95);
+  border: 1px solid #222;
+  border-radius: 10px;
+  box-shadow: 0 0 12px #00ff9d22;
+}
+.table-dark th, .table-dark td {
+  border-color: #222;
+}
+.progress-bar {
+  background: linear-gradient(90deg, #00ff9d 0%, #0ff 100%);
+  box-shadow: 0 0 8px #00ff9d;
+}
+.terminal-log {
+  background: #11151f;
+  color: #00ff9d;
+  font-family: 'Fira Code', monospace;
+  padding: 1em;
+  border-radius: 8px;
+  box-shadow: 0 0 8px #00ff9d44;
+  max-height: 300px;
+  overflow-y: auto;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  background: #222;
+}
+::-webkit-scrollbar-thumb {
+  background: #00ff9d44;
+  border-radius: 4px;
+}
