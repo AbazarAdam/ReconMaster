@@ -1,122 +1,86 @@
 # ReconMaster
 
-An advanced OSINT automation tool for reconnaissance, subdomain discovery, and enriched service intelligence.
+**ReconMaster** is a modular, high-performance reconnaissance framework designed for modern security researchers and OSINT enthusiasts. It provides a centralized hub for automating technical discovery, service enumeration, and data enrichment using a phase-based execution engine.
 
-## Phase 3 Features
-- Parallel module execution with phase-based dependencies
-- Global rate limiting and optional proxy/Tor support
-- Shodan enrichment for IPs and services
-- GitHub dorking for exposed code and secrets
-- Cloud bucket enumeration (AWS, Azure, GCP)
-- Deduplication helpers for cleaner results
+![ReconMaster Dashboard](https://raw.githubusercontent.com/abaze/ReconMaster/main/assets/banner.png)
 
-## Requirements
-- Python 3.10+ (verified with Python 3.14 for asyncio)
-- Optional: Playwright browsers for screenshots
+## 🎯 Key Features
 
-## Setup
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Install Playwright browsers (for screenshots):
-   ```bash
-   playwright install
-   ```
+*   **⚡ Async Orchestration**: Leverages Python's `asyncio` for high-concurrency, parallel module execution.
+*   **🧩 Modular Architecture**: Easily extensible system with standardized `BaseModule` interfaces.
+*   **🕵️ Multi-Source Discovery**: Integrates with crt.sh, AlienVault, VirusTotal, SecurityTrails, and more.
+*   **🌐 Service Intelligence**: Automatic HTTP detection, header analysis, and title extraction.
+*   **📸 Visual Recon**: Headless Playwright-based screenshot capture for discovered web services.
+*   **💎 Data Enrichment**: Built-in Shodan and GitHub connectors for advanced metadata gathering.
+*   **📊 Web Dashboard**: Sleek, professional greyscale interface for scan management and reporting.
+*   **🛡️ Stealth & Control**: Global rate limiting and full SOCKS/Tor proxy support.
 
-## Configuration
-Edit config/default.yaml to enable modules and set keys, rate limits, and proxies.
+## 🚀 Quick Start
 
-Example highlights:
+### 1. Prerequisites
+- Python 3.10 or higher
+- [Playwright](https://playwright.dev/python/docs/intro) (for screenshots)
+
+### 2. Installation
+```bash
+# Clone the repository
+git clone https://github.com/abaze/ReconMaster.git
+cd ReconMaster
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install Playwright browsers (required for screenshot module)
+playwright install chromium
+```
+
+### 3. Usage
+
+#### Start the Web Dashboard
+```bash
+uvicorn web.app:app --host 0.0.0.0 --port 8000
+```
+Navigate to `http://localhost:8000` to initialize your first scan.
+
+#### Run via CLI
+```bash
+python main.py example.com
+```
+
+## ⚙️ Configuration
+
+All system settings are managed via `config/default.yaml`.
+
 ```yaml
 api_keys:
-  shodan: ""
-  github: ""
+  virustotal: "YOUR_KEY"
+  shodan: "YOUR_KEY"
+  github: "YOUR_KEY"
 
 rate_limit: 10
 proxy:
-  http: ""
-  https: ""
   use_tor: false
-
-modules:
-  enabled:
-    subdomain: ["ct", "alienvault", "anubis", "virustotal", "securitytrails"]
-    portscan: ["scanner"]
-    http: ["detector"]
-    screenshot: ["capturer"]
-    shodan: ["enricher"]
-    github: ["dorker"]
-    cloud_buckets: ["enumerator"]
 ```
 
-Notes:
-- Shodan and GitHub modules skip gracefully if API keys are missing.
-- SOCKS proxies (including Tor) are supported via aiohttp-socks.
+## 🏗️ Project Structure
 
-## Run a Scan
-```bash
-python main.py scanme.nmap.org
-```
+- `core/`: High-level orchestration, state management, and infrastructure.
+- `modules/`: Standardized reconnaissance and discovery logic.
+- `web/`: FastAPI-powered dashboard and REST API.
+- `config/`: Centralized YAML configurations.
+- `reports/`: Local storage for screenshots and session logs.
 
-Results are stored in recon.db, and screenshots (if enabled) are saved under reports/screenshots.
+## 📖 Documentation
 
-## Phase 3 Verification
-- Ensure config/default.yaml is updated with your keys and desired modules.
-- Run the scan and confirm module outputs in recon.db.
-- Review recon.log for module progress and rate limit behavior.
+For detailed technical guides, please refer to:
+- [Module Creation Guide](docs/MODULE_CREATION.md)
+- [API Reference](docs/API_REFERENCE.md)
+- [Project Report](PROJECT_REPORT.md)
 
----
+## 🤝 Contributing
 
-## Phase 4: Web Dashboard & REST API
+Contributions are welcome! Please feel free to submit pull requests or open issues for feature requests and bug reports.
 
-ReconMaster now includes a web interface and REST API for managing scans, viewing live progress, and browsing results.
+## 📜 License
 
-### Features
-- Web dashboard (FastAPI + Bootstrap) to start scans, view progress, and see results
-- REST API for programmatic scan management and result retrieval
-- Live progress updates via WebSockets
-- Docker and docker-compose support for easy deployment
-
-### Quick Start (Web UI)
-1. Install new dependencies:
-  ```bash
-  pip install -r requirements.txt
-  playwright install
-  ```
-2. Start the web server:
-  ```bash
-  uvicorn web.app:app --host 0.0.0.0 --port 8000
-  ```
-3. Open [http://localhost:8000](http://localhost:8000) in your browser.
-
-### Using Docker
-Build and run with Docker Compose:
-```bash
-docker-compose up --build
-```
-The web dashboard will be available at [http://localhost:8000](http://localhost:8000).
-
-### REST API Endpoints
-- `POST /api/scans` – Start a new scan (JSON: `{ "target": "example.com" }`)
-- `GET /api/scans` – List all scans
-- `GET /api/scans/{scan_id}` – Get scan details
-- `GET /api/scans/{scan_id}/results` – Get results for a scan
-- `GET /api/targets/{target}/results` – Get all results for a target
-- `DELETE /api/scans/{scan_id}` – Cancel a running scan
-
-### Live Progress
-WebSocket endpoint: `/ws/{scan_id}` streams real-time scan progress to the dashboard.
-
-### Configuration
-Edit `config/default.yaml` to set web server host, port, and secret key:
-```yaml
-web:
-  host: "0.0.0.0"
-  port: 8000
-  debug: false
-  secret_key: "change-this-in-production"
-```
-
----
-For more details, see walkthrough.md and task.md for step-by-step usage and development notes.
+Distributed under the **MIT License**. See `LICENSE` for more information.

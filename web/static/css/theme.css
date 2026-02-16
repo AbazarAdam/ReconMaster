@@ -1,0 +1,219 @@
+/* ReconMaster - Professional Greyscale Theme */
+:root {
+    --bg-dark: #000000;
+    --bg-card: #0a0a0a;
+    --text-primary: #ffffff;
+    --text-muted: #c0c0c0;
+    --accent: #404040;
+    --border-color: #1a1a1a;
+    --status-completed: #ffffff;
+    --status-running: #a0a0a0;
+    --status-failed: #404040;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--bg-dark);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    color: var(--text-primary) !important;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    font-size: 1.25rem;
+}
+
+.nav-link {
+    color: var(--text-muted) !important;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: var(--text-primary) !important;
+}
+
+/* Cards & Containers */
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.card-title {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Form Elements */
+.form-control {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 2px;
+    padding: 0.6rem 1rem;
+}
+
+.form-control:focus {
+    background-color: #050505;
+    border-color: var(--accent);
+    color: var(--text-primary);
+    box-shadow: none;
+}
+
+.input-group-text {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 2px;
+    font-weight: 500;
+    padding: 0.6rem 1.2rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary,
+.btn-neon {
+    background-color: var(--text-primary);
+    border: 1px solid var(--text-primary);
+    color: var(--bg-dark);
+}
+
+.btn-primary:hover,
+.btn-neon:hover {
+    background-color: var(--text-muted);
+    border-color: var(--text-muted);
+    color: var(--bg-dark);
+}
+
+.btn-outline-primary {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--text-primary);
+    color: var(--bg-dark);
+}
+
+/* Tables */
+.table {
+    color: var(--text-primary);
+}
+
+.table-dark {
+    background-color: var(--bg-card);
+}
+
+.table-hover tbody tr:hover {
+    background-color: #111111;
+}
+
+td,
+th {
+    border-color: var(--border-color) !important;
+    padding: 1rem 0.75rem !important;
+}
+
+/* Badges */
+.badge {
+    border-radius: 2px;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+}
+
+.bg-success {
+    background-color: var(--accent) !important;
+    color: white !important;
+}
+
+.bg-warning {
+    background-color: #555555 !important;
+    color: white !important;
+}
+
+.bg-danger {
+    background-color: #222222 !important;
+    color: #ff5555 !important;
+}
+
+/* Console / Terminal */
+.log-console,
+.terminal-log {
+    background-color: #000000;
+    border: 1px solid var(--border-color);
+    color: #cccccc;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+    padding: 1rem;
+    border-radius: 2px;
+    line-height: 1.4;
+}
+
+/* Progress Bars */
+.progress {
+    background-color: var(--border-color);
+    height: 4px;
+    border-radius: 0;
+}
+
+.progress-bar {
+    background-color: var(--text-primary);
+}
+
+/* Utilities */
+.text-neon-cyan,
+.text-neon-green {
+    color: var(--text-primary) !important;
+    text-shadow: none !important;
+}
+
+footer {
+    border-top: 1px solid var(--border-color) !important;
+    padding: 2rem 0;
+    font-size: 0.8rem;
+    color: var(--text-primary) !important;
+}
+
+footer small {
+    color: var(--text-muted);
+}
+
+/* Contrast Fixes */
+#summaryStats .card h3 {
+    color: var(--text-primary) !important;
+}
+
+.lead {
+    color: var(--text-primary) !important;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Tooltip Styling for Screenshot Errors */
+.error-info {
+    cursor: help;
+    color: #ff5555;
+    margin-left: 5px;
+}

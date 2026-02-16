@@ -7,3 +7,11 @@ venv/
 *.log
 .vscode/
 .idea/
+reports/screenshots/
+reports/logs/
+recon.db
+recon.log
+data/
+node_modules/
+dist/
+build/

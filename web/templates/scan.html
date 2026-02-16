@@ -4,26 +4,26 @@
 <div class="row mb-4">
     <div class="col-md-12">
         <div class="card p-4">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h2 class="mb-0 text-light">Scanning: <span class="text-neon-cyan">{{ scan.target }}</span></h2>
+                    <h2 class="mb-0 fw-bold">SCANNING: {{ scan.target }}</h2>
                     <small class="text-muted">ID: {{ scan_id }}</small>
                 </div>
                 <div>
-                    <span id="scanStatus" class="badge status-{{ scan.status }} fs-5">{{ scan.status|upper }}</span>
+                    <span id="scanStatus" class="badge bg-warning fs-6">{{ scan.status|upper }}</span>
                 </div>
             </div>
 
             <div class="mt-4">
-                <h5 class="text-neon-green">Live Logs <span class="cursor">_</span></h5>
-                <div id="logConsole" class="log-console">
+                <h5 class="card-title"><i class="fas fa-terminal"></i> LIVE CONSOLE</h5>
+                <div id="logConsole" class="log-console mt-2">
                     <!-- Logs will appear here -->
                 </div>
             </div>
 
             <div class="mt-4 d-flex justify-content-end">
-                <a id="btnViewResults" href="/results/{{ scan.target }}" class="btn btn-neon disabled">
-                    <i class="fas fa-poll"></i> View Results
+                <a id="btnViewResults" href="/results/{{ scan.target }}" class="btn btn-primary disabled">
+                    <i class="fas fa-file-alt"></i> VIEW FULL REPORT
                 </a>
             </div>
         </div>
@@ -33,12 +33,12 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card p-4">
-            <h5 class="mb-3">Scan Phases</h5>
-            <div class="progress mb-3" style="height: 5px; background-color: #2d3748;">
-                <div id="scanProgress" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+            <h5 class="card-title"><i class="fas fa-layer-group"></i> MODULE PROGRESS</h5>
+            <div class="progress my-3">
+                <div id="scanProgress" class="progress-bar" role="progressbar" style="width: 0%"></div>
             </div>
-            <div class="row text-center text-muted" id="moduleGrid">
-                <div class="col">Pending Initialization...</div>
+            <div class="row g-2" id="moduleGrid">
+                <div class="col-12 text-center text-muted">Awaiting module initialization...</div>
             </div>
         </div>
     </div>
@@ -116,7 +116,7 @@
                     addLog(`[STATUS] ${data.status.toUpperCase()}`, 'text-warning fw-bold');
                     if (scanStatus) {
                         scanStatus.textContent = data.status.toUpperCase();
-                        scanStatus.className = `badge status-${data.status} fs-5`;
+                        scanStatus.className = `badge bg-${data.status === 'completed' ? 'success' : (data.status === 'failed' ? 'danger' : 'warning')} fs-6`;
                     }
                     if (data.status === 'completed') {
                         updateProgress(100);
@@ -153,9 +153,9 @@
                             col.className = 'col-md-2 mb-2';
                             col.id = `mod-${moduleName.replace(/[^a-z0-9]/gi, '_')}`;
                             col.innerHTML = `
-                                <div class="card bg-dark border-info p-2 text-center shadow-sm">
-                                    <small class="text-info">${moduleName}</small>
-                                    <div class="spinner-border spinner-border-sm text-info mt-1" role="status"></div>
+                                <div class="card bg-dark p-2 text-center">
+                                    <small class="text-muted mb-1">${moduleName}</small>
+                                    <div class="spinner-border spinner-border-sm text-secondary mx-auto" role="status"></div>
                                 </div>
                             `;
                             moduleGrid.appendChild(col);
