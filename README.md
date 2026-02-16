@@ -1,86 +1,42 @@
-# ReconMaster
+# ReconMaster 🛡️
 
-**ReconMaster** is a modular, high-performance reconnaissance framework designed for modern security researchers and OSINT enthusiasts. It provides a centralized hub for automating technical discovery, service enumeration, and data enrichment using a phase-based execution engine.
+Advanced Automated Reconnaissance Framework for security professionals.
 
-![ReconMaster Dashboard](https://raw.githubusercontent.com/abaze/ReconMaster/main/assets/banner.png)
+## 🚀 Overview
+ReconMaster is a modular, high-performance reconnaissance tool designed to automate the discovery and enumeration phases of a security assessment. It provides a centralized dashboard for managing scans, viewing live progress, and analyzing results.
 
-## 🎯 Key Features
+## ✨ Features
+- **Parallel Discovery**: Rapid subdomain enumeration and IP discovery.
+- **Service Detection**: Automated port scanning and HTTP service identification.
+- **Deep Artifact Collection**: Screenshot capturing, tech stack detection, and cloud bucket enumeration.
+- **Modern UI**: High-contrast professional interface with live progress tracking and detailed reports.
+- **Stealth & Resilience**: Integrated proxy rotation, rate limiting, and browser fingerprinting bypass.
 
-*   **⚡ Async Orchestration**: Leverages Python's `asyncio` for high-concurrency, parallel module execution.
-*   **🧩 Modular Architecture**: Easily extensible system with standardized `BaseModule` interfaces.
-*   **🕵️ Multi-Source Discovery**: Integrates with crt.sh, AlienVault, VirusTotal, SecurityTrails, and more.
-*   **🌐 Service Intelligence**: Automatic HTTP detection, header analysis, and title extraction.
-*   **📸 Visual Recon**: Headless Playwright-based screenshot capture for discovered web services.
-*   **💎 Data Enrichment**: Built-in Shodan and GitHub connectors for advanced metadata gathering.
-*   **📊 Web Dashboard**: Sleek, professional greyscale interface for scan management and reporting.
-*   **🛡️ Stealth & Control**: Global rate limiting and full SOCKS/Tor proxy support.
+## 🛠️ Tech Stack
+- **Backend**: FastAPI (Python 3.9+)
+- **Frontend**: Bootstrap 5, Vanilla JS (Neon/Greyscale themes)
+- **Engine**: Asyncio, Playwright, Nmap
+- **Database**: SQLite with WAL mode
 
-## 🚀 Quick Start
+## 🚦 Quick Start
+1. **Clone & Install**:
+   ```bash
+   git clone https://github.com/AbazarAdam/ReconMaster.git
+   cd ReconMaster
+   pip install -r requirements.txt
+   playwright install chromium
+   ```
+2. **Launch Dashboard**:
+   ```bash
+   python main.py --web
+   ```
+3. **Start Scanning**: Navigate to `http://localhost:8000`, enter your target, and watch the results roll in.
 
-### 1. Prerequisites
-- Python 3.10 or higher
-- [Playwright](https://playwright.dev/python/docs/intro) (for screenshots)
+## 📂 Project Structure
+- `core/`: Orchestration engine and shared utilities.
+- `modules/`: Specialized reconnaissance plugins.
+- `web/`: FastAPI application and static assets.
+- `reports/`: Generated screenshots and logs.
 
-### 2. Installation
-```bash
-# Clone the repository
-git clone https://github.com/abaze/ReconMaster.git
-cd ReconMaster
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Install Playwright browsers (required for screenshot module)
-playwright install chromium
-```
-
-### 3. Usage
-
-#### Start the Web Dashboard
-```bash
-uvicorn web.app:app --host 0.0.0.0 --port 8000
-```
-Navigate to `http://localhost:8000` to initialize your first scan.
-
-#### Run via CLI
-```bash
-python main.py example.com
-```
-
-## ⚙️ Configuration
-
-All system settings are managed via `config/default.yaml`.
-
-```yaml
-api_keys:
-  virustotal: "YOUR_KEY"
-  shodan: "YOUR_KEY"
-  github: "YOUR_KEY"
-
-rate_limit: 10
-proxy:
-  use_tor: false
-```
-
-## 🏗️ Project Structure
-
-- `core/`: High-level orchestration, state management, and infrastructure.
-- `modules/`: Standardized reconnaissance and discovery logic.
-- `web/`: FastAPI-powered dashboard and REST API.
-- `config/`: Centralized YAML configurations.
-- `reports/`: Local storage for screenshots and session logs.
-
-## 📖 Documentation
-
-For detailed technical guides, please refer to:
-- [Module Creation Guide](docs/MODULE_CREATION.md)
-- [API Reference](docs/API_REFERENCE.md)
-- [Project Report](PROJECT_REPORT.md)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit pull requests or open issues for feature requests and bug reports.
-
-## 📜 License
-
-Distributed under the **MIT License**. See `LICENSE` for more information.
+## ⚖️ License
+MIT License - See `LICENSE` for details.
