@@ -33,6 +33,9 @@ class ScanManager:
             # Send to WebSocket
             await self.ws_manager.send_message(scan_id, data)
         
+        # Pre-create scan record to avoid race conditions (404/500 errors)
+        await self.db.create_scan(scan_id, target, status="pending")
+
         # Create task
         task = asyncio.create_task(self._run_background_scan(scan_id, target, config, progress_callback))
         self.active_scans[scan_id] = task

@@ -279,7 +279,7 @@ class Database:
             logger.info(f"[DB] Creating scan tracking entry | ID: {scan_id} | Target: {target}")
             with self._get_connection() as conn:
                 conn.execute(
-                    "INSERT INTO scans (id, target, status, start_time) VALUES (?, ?, ?, ?)",
+                    "INSERT OR REPLACE INTO scans (id, target, status, start_time) VALUES (?, ?, ?, ?)",
                     (scan_id, target, status, datetime.now()),
                 )
                 conn.commit()

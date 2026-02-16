@@ -14,7 +14,7 @@ ReconMaster is an advanced, modular OSINT automation framework for reconnaissanc
 - **Infrastructure Upgrades**: Centralized proxy management (HTTP/SOCKS/Tor) and token-bucket rate limiting to ensure stealth and target-friendly scanning.
 
 ### 2. UI/UX Transformation
-- **Greyscale Aesthetic**: Migrated from a high-contrast neon theme to a professional, minimal greyscale palette (Black/White/Grey) for improved readability and a "high-end security tool" feel.
+- **Greyscale Aesthetic**: Adopted a professional, minimal greyscale palette (Black/White/Grey) for improved readability and a "high-end security tool" feel.
 - **Responsive Dashboard**: Updated the FastAPI/Bootstrap frontend for better telemetry visualization, including live modular progress and detailed scan reports.
 - **Visual Recon**: Enhanced integration with Playwright for reliable, concurrent screenshot capture.
 

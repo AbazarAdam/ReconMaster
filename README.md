@@ -14,7 +14,7 @@ ReconMaster is a modular, high-performance reconnaissance tool designed to autom
 
 ## 🛠️ Tech Stack
 - **Backend**: FastAPI (Python 3.9+)
-- **Frontend**: Bootstrap 5, Vanilla JS (Neon/Greyscale themes)
+- **Frontend**: Bootstrap 5, Vanilla JS (Professional Greyscale Theme)
 - **Engine**: Asyncio, Playwright, Nmap
 - **Database**: SQLite with WAL mode
 
