@@ -31,7 +31,8 @@ app.state.scan_manager = scan_manager
 app.state.ws_manager = ws_manager
 
 # Mount static files
-static_dir = os.path.join(os.path.dirname(__file__), "static")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+static_dir = os.path.join(BASE_DIR, "static")
 if not os.path.exists(static_dir):
     os.makedirs(static_dir)
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
@@ -43,7 +44,7 @@ if not os.path.exists(reports_dir):
 app.mount("/reports", StaticFiles(directory=reports_dir), name="reports")
 
 # Jinja2 templates
-templates_dir = os.path.join(os.path.dirname(__file__), "templates")
+templates_dir = os.path.join(BASE_DIR, "templates")
 if not os.path.exists(templates_dir):
     os.makedirs(templates_dir)
 templates = Jinja2Templates(directory=templates_dir)

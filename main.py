@@ -6,10 +6,17 @@ from core.engine import run_scan
 
 def main():
     parser = argparse.ArgumentParser(description="Recon Master - OSINT Automation Tool")
-    parser.add_argument("target", help="Domain to scan (e.g., example.com)")
+    parser.add_argument("target", nargs="?", help="Domain to scan (e.g., example.com)")
     parser.add_argument("--config", default="config/default.yaml", help="Path to config file")
+    parser.add_argument("--web", action="store_true", help="Launch the web dashboard")
     
     args = parser.parse_args()
+
+    if args.web:
+        import uvicorn
+        print("[*] Launching ReconMaster Web Dashboard...")
+        uvicorn.run("web.app:app", host="0.0.0.0", port=8000, reload=True)
+        return
 
     if not args.target:
         parser.print_help()
