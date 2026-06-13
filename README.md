@@ -4,6 +4,7 @@ Advanced Automated Reconnaissance Framework for security professionals.
 
 ## 🚀 Overview
 ReconMaster is a modular, high-performance reconnaissance tool designed to automate the discovery and enumeration phases of a security assessment. It provides a centralized dashboard for managing scans, viewing live progress, and analyzing results.
+<img width="1059" height="621" alt="image" src="https://github.com/user-attachments/assets/c1fd8a59-4367-44a8-bedc-f270da5bcea1" />
 
 ## ✨ Features
 - **Parallel Discovery**: Rapid subdomain enumeration and IP discovery.
