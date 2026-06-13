@@ -92,7 +92,14 @@ These modules require valid API keys in `config/secrets.yaml`.
      shodan: "YOUR_KEY"
      github: "YOUR_KEY"
    ```
+## 🔧 Common Issues
 
+- **`playwright` command not found**  
+  Use `python -m playwright install chromium` instead of `playwright install chromium`.
+
+- **`500 Internal Server Error` on `/` in older clones**  
+  Make sure you are on the latest `main` branch; `web/app.py` was updated to fix FastAPI/Starlette template changes.
+  
 ### ❌ Rate Limiting (429 Errors)
 **Symptoms:** Logs show `[WARNING] API returned non-200 status: 429`.
 **Solution:**
