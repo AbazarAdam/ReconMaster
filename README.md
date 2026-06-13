@@ -41,3 +41,10 @@ ReconMaster is a modular, high-performance reconnaissance tool designed to autom
 
 ## ⚖️ License
 MIT License - See `LICENSE` for details.
+
+## 👤 Author
+
+**Abazar Adam**
+- GitHub: [@AbazarAdam](https://github.com/AbazarAdam)
+- LinkedIn: [@AbazarAdam](https://www.linkedin.com/in/abazaradam)
+
