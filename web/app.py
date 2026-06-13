@@ -1,4 +1,5 @@
 from typing import Optional
+from jinja2 import Environment, FileSystemLoader
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -43,11 +44,19 @@ if not os.path.exists(reports_dir):
     os.makedirs(reports_dir)
 app.mount("/reports", StaticFiles(directory=reports_dir), name="reports")
 
-# Jinja2 templates
-templates_dir = os.path.join(BASE_DIR, "templates")
-if not os.path.exists(templates_dir):
-    os.makedirs(templates_dir)
-templates = Jinja2Templates(directory=templates_dir)
+# Jinja2 templates (fixed with no cache)
+TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
+
+# Create a Jinja2 Environment manually and disable internal caching
+jinja_env = Environment(
+    loader=FileSystemLoader(TEMPLATES_DIR),
+    autoescape=True,
+    cache_size=0,  # disable template cache to avoid tuple/dict key bug
+)
+
+# Plug this environment into FastAPI's Jinja2Templates wrapper
+templates = Jinja2Templates(directory=TEMPLATES_DIR)
+templates.env = jinja_env
 
 # Include API router
 app.include_router(api_router, prefix="/api")
@@ -65,19 +74,34 @@ app.add_middleware(
 
 @app.get("/")
 async def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(
+        name="index.html",
+        context={"request": request},
+        request=request,
+    )
 
 @app.get("/scan/{scan_id}")
 async def scan_progress(request: Request, scan_id: str):
-    # Verify scan exists? Optional, but good UX.
     scan = await scan_manager.get_scan(scan_id)
     if not scan:
-        return templates.TemplateResponse("index.html", {"request": request, "error": "Scan not found"})
-    return templates.TemplateResponse("scan.html", {"request": request, "scan_id": scan_id, "scan": scan})
+        return templates.TemplateResponse(
+            name="index.html",
+            context={"request": request, "error": "Scan not found"},
+            request=request,
+        )
+    return templates.TemplateResponse(
+        name="scan.html",
+        context={"request": request, "scan_id": scan_id, "scan": scan},
+        request=request,
+    )
 
 @app.get("/results/{target}")
 async def results_page(request: Request, target: str, scan_id: Optional[str] = None):
-    return templates.TemplateResponse("results.html", {"request": request, "target": target, "scan_id": scan_id})
+    return templates.TemplateResponse(
+        name="results.html",
+        context={"request": request, "target": target, "scan_id": scan_id},
+        request=request,
+    )
 
 # --- WebSocket ---
 
